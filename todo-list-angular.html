@@ -1,0 +1,111 @@
+<html ng-app="todoApp">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <style type="text/css">
+
+        .done-true {
+          text-decoration: line-through;
+          color: grey;
+        }
+
+        body {
+          line-height: 1;
+        }
+
+        ol, ul {
+          list-style: none;
+        }
+
+        body {
+          font: 16px/20px 'Lucida Grande', Tahoma, Verdana, sans-serif;
+          color: #ededed;
+          background: #d8e5e5;
+        }
+
+        .format-box {
+          background: #3d4543;
+          border: 1px solid #222;
+          border-radius: 4px;
+          background-image: -webkit-linear-gradient(top, #3d4543, #2f2a2f);
+          background-image: -moz-linear-gradient(top, #3d4543, #2f2a2f);
+          background-image: -o-linear-gradient(top, #3d4543, #2f2a2f);
+          background-image: linear-gradient(to bottom, #3d4543, #2f2a2f);
+          -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 4px rgba(0, 0, 0, 0.5);
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .title {
+          text-align: center;
+          margin: 50px auto;
+          padding: 15px;
+          width: 500;
+        }
+
+        .todo-box {
+          margin: 50px auto;
+          padding: 15px;
+          width: 500;
+        }
+
+        .list-todo {
+            margin-top: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        angular.module('todoApp', [])
+          .controller('TodoListController', function() {
+            var todoList = this;
+            todoList.todos = [
+              {text:'learn AngularJS', done:true},
+              {text:'build an AngularJS app', done:false}];
+
+            todoList.addTodo = function() {
+              todoList.todos.push({text:todoList.todoText, done:false});
+              todoList.todoText = '';
+            };
+
+            todoList.remaining = function() {
+              var count = 0;
+              angular.forEach(todoList.todos, function(todo) {
+                count += todo.done ? 0 : 1;
+              });
+              return count;
+            };
+
+            todoList.archive = function() {
+              var oldTodos = todoList.todos;
+              todoList.todos = [];
+              angular.forEach(oldTodos, function(todo) {
+                if (!todo.done) todoList.todos.push(todo);
+              });
+            };
+          });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  </head>
+
+
+  <body>
+    <h2 class="format-box title">Lista de Tarefas</h2>
+    <div ng-controller="TodoListController as todoList" class="format-box todo-box">
+      <span>{{todoList.remaining()}} de {{todoList.todos.length}} pendentes</span>
+      [ <a href="" ng-click="todoList.archive()">arquivar</a> ]
+      <ul class="list-todo">
+        <li ng-repeat="todo in todoList.todos">
+          <label class="checkbox">
+            <input type="checkbox" ng-model="todo.done">
+            <span class="done-{{todo.done}}">{{todo.text}}</span>
+          </label>
+        </li>
+      </ul>
+      <form ng-submit="todoList.addTodo()">
+        <input type="text" ng-model="todoList.todoText"  size="40"
+               placeholder="nova tarefa...">
+        <input class="btn-primary" type="submit" value="adicionar">
+      </form>
+    </div>
+  </body>
+</html>
